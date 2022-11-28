@@ -1,5 +1,8 @@
 package glm_.vec4
 
+import android.annotation.TargetApi
+import android.graphics.Color
+import android.os.Build
 import glm_.*
 import glm_.vec1.Vec1bool
 import glm_.vec1.Vec1t
@@ -13,7 +16,6 @@ import glm_.vec4.operators.vec4_operators
 import kool.*
 import org.lwjgl.system.MemoryUtil.memGetFloat
 import org.lwjgl.system.MemoryUtil.memPutFloat
-import java.awt.Color
 import java.io.InputStream
 import java.io.PrintStream
 import java.nio.*
@@ -142,7 +144,8 @@ class Vec4(var ofs: Int, var array: FloatArray) : Vec4t<Float>(), ToFloatBuffer 
             this(inputStream.float(bigEndian), inputStream.float(bigEndian), inputStream.float(bigEndian), inputStream.float(bigEndian))
 
     // TODO other non float?
-    constructor(color: Color) : this(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+    @TargetApi(Build.VERSION_CODES.O)
+    constructor(color: Color) : this(color.red(), color.green(), color.blue(), color.alpha())
 
 
     fun set(bytes: ByteArray, index: Int = 0, oneByteOneFloat: Boolean = false, bigEndian: Boolean = true) {
@@ -529,12 +532,13 @@ class Vec4(var ofs: Int, var array: FloatArray) : Vec4t<Float>(), ToFloatBuffer 
         fun fromColor(r: Number, g: Number, b: Number, a: Number = 255f) = Vec4(r.f / 255, g.f / 255, b.f / 255f, a.f / 255)
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     @JvmOverloads
     fun toColor(normalized: Boolean = true): Color = when {
-        normalized -> Color(r, g, b, w)
+        normalized -> Color.valueOf(r, g, b, w)
         else -> {
             val i = 1f / 255
-            Color(r * i, g * i, b * i, w * i)
+            Color.valueOf(r * i, g * i, b * i, w * i)
         }
     }
 

@@ -1,5 +1,8 @@
 package glm_.vec3
 
+import android.annotation.TargetApi
+import android.graphics.Color
+import android.os.Build
 import glm_.*
 import glm_.vec1.Vec1bool
 import glm_.vec1.Vec1t
@@ -7,13 +10,10 @@ import glm_.vec2.Vec2
 import glm_.vec2.Vec2bool
 import glm_.vec2.Vec2t
 import glm_.vec3.operators.vec3_operators
-import glm_.vec4.Vec4
 import glm_.vec4.Vec4bool
 import glm_.vec4.Vec4t
 import kool.*
 import org.lwjgl.system.MemoryUtil.memGetFloat
-import org.lwjgl.system.MemoryUtil.memPutFloat
-import java.awt.Color
 import java.io.InputStream
 import java.io.PrintStream
 import java.nio.*
@@ -120,7 +120,8 @@ class Vec3(var ofs: Int, var array: FloatArray) : Vec3t<Float>(), ToFloatBuffer 
     constructor(inputStream: InputStream, bigEndian: Boolean = true) :
             this(inputStream.float(bigEndian), inputStream.float(bigEndian), inputStream.float(bigEndian))
 
-    constructor(color: Color) : this(color.red / 255f, color.green / 255f, color.blue / 255f)
+    @TargetApi(Build.VERSION_CODES.O)
+    constructor(color: Color) : this(color.red(), color.green(), color.blue())
 
     fun set(bytes: ByteArray, index: Int = 0, oneByteOneFloat: Boolean = false, bigEndian: Boolean = true) {
         x = if (oneByteOneFloat) bytes[index].f else bytes.getFloat(index, bigEndian)
@@ -504,20 +505,22 @@ class Vec3(var ofs: Int, var array: FloatArray) : Vec3t<Float>(), ToFloatBuffer 
         fun fromColor(r: Number, g: Number, b: Number) = Vec3(r.f / 255, g.f / 255, b.f / 255f)
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     @JvmOverloads
     fun toColor(alpha: Float? = null, normalized: Boolean = true) = when {
-        normalized -> Color(r, g, b, alpha ?: 1f)
+        normalized -> Color.valueOf(r, g, b, alpha ?: 1f)
         else -> {
             val i = 1f / 255
-            Color(r * i, g * i, b * i, alpha?.times(i) ?: 1f)
+            Color.valueOf(r * i, g * i, b * i, alpha?.times(i) ?: 1f)
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     fun toColor(normalized: Boolean = true) = when {
-        normalized -> Color(r, g, b, 1f)
+        normalized -> Color.valueOf(r, g, b, 1f)
         else -> {
             val i = 1f / 255
-            Color(r * i, g * i, b * i, 1f)
+            Color.valueOf(r * i, g * i, b * i, 1f)
         }
     }
 
