@@ -1,5 +1,8 @@
 package glm_.vec2
 
+import android.annotation.TargetApi
+import android.graphics.Color
+import android.os.Build
 import glm_.*
 import glm_.vec1.Vec1bool
 import glm_.vec1.Vec1t
@@ -10,7 +13,6 @@ import glm_.vec4.Vec4bool
 import glm_.vec4.Vec4t
 import kool.*
 import org.lwjgl.system.MemoryUtil.memGetFloat
-import java.awt.Color
 import java.io.InputStream
 import java.io.PrintStream
 import java.nio.*
@@ -102,7 +104,8 @@ class Vec2(var ofs: Int, var array: FloatArray) : Vec2t<Float>(), ToFloatBuffer 
 
     constructor(inputStream: InputStream, bigEndian: Boolean = true) : this(inputStream.float(bigEndian), inputStream.float(bigEndian))
 
-    constructor(color: Color) : this(color.red / 255f, color.green / 255f)
+    @TargetApi(Build.VERSION_CODES.O)
+    constructor(color: Color) : this(color.red(), color.green())
 
     fun set(bytes: ByteArray, index: Int = 0, oneByteOneFloat: Boolean = false, bigEndian: Boolean = true) {
         if (oneByteOneFloat) {

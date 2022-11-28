@@ -1,5 +1,8 @@
 package glm_.vec4
 
+import android.annotation.TargetApi
+import android.graphics.Color
+import android.os.Build
 import glm_.*
 import glm_.vec1.Vec1bool
 import glm_.vec1.Vec1t
@@ -13,7 +16,6 @@ import glm_.vec4.operators.vec4d_operators
 import kool.*
 import org.lwjgl.system.MemoryUtil.memGetDouble
 import org.lwjgl.system.MemoryUtil.memPutDouble
-import java.awt.Color
 import java.io.InputStream
 import java.io.PrintStream
 import java.nio.*
@@ -139,7 +141,8 @@ class Vec4d(var ofs: Int, var array: DoubleArray) : Vec4t<Double>(), ToDoubleBuf
     constructor(inputStream: InputStream, bigEndian: Boolean = true) :
             this(inputStream.double(bigEndian), inputStream.double(bigEndian), inputStream.double(bigEndian), inputStream.double(bigEndian))
 
-    constructor(color: Color) : this(color.red / 255.0, color.green / 255.0, color.blue / 255.0, color.alpha / 255.0)
+    @TargetApi(Build.VERSION_CODES.O)
+    constructor(color: Color) : this(color.toArgb() / 255.0, color.green() / 255.0, color.blue() / 255.0, color.alpha() / 255.0)
 
 
     fun set(bytes: ByteArray, index: Int = 0, oneByteOneDouble: Boolean = false, bigEndian: Boolean = true) {
